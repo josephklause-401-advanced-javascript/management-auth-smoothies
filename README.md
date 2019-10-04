@@ -7,7 +7,7 @@
 ### Links and Resources
 * [submission PR](https://github.com/josephklause-401-advanced-javascript/management-auth-smoothies/pull/1)
 * [travis](https://travis-ci.com/josephklause-401-advanced-javascript/management-auth-smoothies)
-* [heroku]()
+* [heroku](https://smoothies-authorization.herokuapp.com)
 
 
 #### Running the app
