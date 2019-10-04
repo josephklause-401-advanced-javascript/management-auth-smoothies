@@ -1,8 +1,8 @@
-# LAB - 
+# LAB - Class 14
 
-## Project Name
+## User Management and Auth
 
-### Author: Student/Group Name
+### Author: Joe Klause
 
 ### Links and Resources
 * [submission PR](https://github.com/josephklause-401-advanced-javascript/management-auth-smoothies/pull/1)
