@@ -94,4 +94,28 @@ describe('Auth-User API', () => {
           });
       });
   });
+
+  it('gets all users and returns email and roles', () => {
+    return request
+      .get('/api/auth/users')
+      .set('Authorization', testAdminToken)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.length).toBe(2);
+        expect(body[0]).toMatchInlineSnapshot(
+          {
+            _id: expect.any(String)
+          },
+          `
+          Object {
+            "_id": Any<String>,
+            "email": "admin@admin.com",
+            "roles": Array [
+              "admin",
+            ],
+          }
+        `
+        );
+      });
+  });
 });
