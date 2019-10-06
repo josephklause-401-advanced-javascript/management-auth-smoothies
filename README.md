@@ -20,6 +20,7 @@ Commands:
     "test:verbose": "npm run test -- --verbose",
     "start": "node server.js",
     "start:watch": "nodemon server.js"
+     "make:admin": "node lib/scripts/make-admin.js"
 
 #### Tests
 * Jest Tests: `npm test`
