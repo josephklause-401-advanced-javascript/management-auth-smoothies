@@ -152,18 +152,12 @@ describe('Juice api', () => {
 
   it('rejects puts by non admins', () => {
     return postJuice(juice).then(juice => {
-      return request
-        .delete(`/api/juices/${juice._id}`)
-        .expect(401);
+      return request.delete(`/api/juices/${juice._id}`).expect(401);
     });
   });
 
-
   it('lets all users get', () => {
-    return Promise.all([
-      postJuice(juice),
-      postJuice(juice)
-    ])
+    return Promise.all([postJuice(juice), postJuice(juice)])
       .then(() => {
         return request
           .get('/api/juices')
@@ -172,7 +166,22 @@ describe('Juice api', () => {
       })
       .then(({ body }) => {
         expect(body.length).toBe(2);
-        expect(body[0]).toMatchInlineSnapshot();
+        expect(body[0]).toMatchInlineSnapshot(
+          {
+            _id: expect.any(String)
+          },
+          `
+          Object {
+            "_id": Any<String>,
+            "ingredients": Array [
+              "orange",
+              "coconut",
+              "lime",
+            ],
+            "name": "Orange Sunshine",
+          }
+        `
+        );
       });
   });
 });
