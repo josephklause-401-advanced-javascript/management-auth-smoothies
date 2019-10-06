@@ -18,11 +18,6 @@ describe('Auth-User API', () => {
   beforeEach(() => {
     return signupUser(testAdmin).then(user => {
       testAdminToken = user.token;
-      return User.updateById(user._id, {
-        $addToSet: {
-          roles: 'admin'
-        }
-      });
     });
   });
 

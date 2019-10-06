@@ -1,7 +1,6 @@
 const request = require('../request');
 const { dropCollection } = require('../db');
 const { signupUser } = require('../data-helpers');
-// const User = require('../user');
 
 describe('me api', () => {
   beforeEach(() => dropCollection('users'));
