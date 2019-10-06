@@ -1,7 +1,6 @@
 const request = require('../request');
 const { dropCollection } = require('../db');
 const { signupUser } = require('../data-helpers');
-const User = require('../../lib/models/user');
 
 describe('Juice api', () => {
   beforeEach(() => dropCollection('users'));
