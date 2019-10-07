@@ -1,6 +1,7 @@
 const request = require('../request');
 const { dropCollection } = require('../db');
 const { signupUser } = require('../data-helpers');
+const User = require('../../lib/models/user');
 
 describe('Juice api', () => {
   beforeEach(() => dropCollection('users'));
@@ -9,27 +10,42 @@ describe('Juice api', () => {
   const testAdmin = {
     email: 'admin@admin.com',
     password: 'abc',
-    roles: ['admin']
   };
 
   let testAdminToken;
   let testUserToken;
 
   beforeEach(() => {
-    return signupUser(testAdmin).then(user => {
-      testAdminToken = user.token;
-    });
+    return signupUser(testAdmin)
+      .then(user => {        
+        return User.updateById(user._id, {
+          $addToSet: {
+            roles: 'admin'
+          }
+        });
+      })
+      .then(() => {
+        return request
+          .post('/api/auth/signin')
+          .send(testAdmin)
+          .expect(200)
+          .then(({ body }) => {
+            testAdminToken = body.token;
+          });
+      });
   });
 
+    
   const testUser = {
     email: 'me@me.com',
     password: 'abc'
   };
 
   beforeEach(() => {
-    return signupUser(testUser).then(user => {
-      testUserToken = user.token;
-    });
+    return signupUser(testUser)
+      .then(user => {
+        testUserToken = user.token;
+      });
   });
 
   const juice = {
@@ -76,8 +92,9 @@ describe('Juice api', () => {
   it('rejects postings by a non admin', () => {
     return request
       .post('/api/juices')
+      .set('Authorization', testUserToken)
       .send(juice)
-      .expect(401);
+      .expect(403);
   });
 
   it('only allows puts by admins', () => {
@@ -114,10 +131,11 @@ describe('Juice api', () => {
     return postJuice(juice).then(juice => {
       return request
         .put(`/api/juices/${juice._id}`)
+        .set('Authorization', testUserToken)
         .send({
           name: 'black death'
         })
-        .expect(401);
+        .expect(403);
     });
   });
 
@@ -184,3 +202,4 @@ describe('Juice api', () => {
       });
   });
 });
+

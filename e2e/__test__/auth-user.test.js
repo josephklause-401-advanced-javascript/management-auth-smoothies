@@ -1,24 +1,37 @@
 const request = require('../request');
 const { dropCollection } = require('../db');
 const { signupUser } = require('../data-helpers');
-
+const User = require('../../lib/models/user');
 
 describe('Auth-User API', () => {
   beforeEach(() => dropCollection('users'));
 
   const testAdmin = {
     email: 'admin@admin.com',
-    password: 'abc',
-    roles: ['admin']
+    password: 'abc'
   };
 
   let testAdminToken;
   let testUserId;
 
   beforeEach(() => {
-    return signupUser(testAdmin).then(user => {
-      testAdminToken = user.token;
-    });
+    return signupUser(testAdmin)
+      .then(user => {        
+        return User.updateById(user._id, {
+          $addToSet: {
+            roles: 'admin'
+          }
+        });
+      })
+      .then(() => {
+        return request
+          .post('/api/auth/signin')
+          .send(testAdmin)
+          .expect(200)
+          .then(({ body }) => {
+            testAdminToken = body.token;
+          });
+      });
   });
 
   const testUser = {
